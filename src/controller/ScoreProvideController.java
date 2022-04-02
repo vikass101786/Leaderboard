@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 public class ScoreProvideController {
 
@@ -33,8 +35,10 @@ public class ScoreProvideController {
         scoreController.updateScores(scoreList);
 
         while (true) {
-            scoreController.updateIndividualScore(new Score(nameList.get((int)(Math.random() * 50 % nameList.size())) ,
-                    (int)(Math.random()*97)));
+            CompletableFuture.runAsync(() -> {
+                scoreController.updateIndividualScore(new Score(nameList.get((int)(Math.random() * 50 % nameList.size())) ,
+                        (int)(Math.random()*97)));
+            }, Executors.newFixedThreadPool(5));
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {

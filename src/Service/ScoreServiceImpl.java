@@ -32,21 +32,29 @@ public class ScoreServiceImpl implements ScoreService{
         return "SUCCESS";
     }
 
+
+    /*
+    * Return top 10 players
+    * */
+
     @Override
     public Map<String , Integer> getLeaderBoard() {
 
-        LinkedHashMap    map = new LinkedHashMap() {
-                @Override
-                protected boolean removeEldestEntry(Map.Entry eldest) {
-                    return size() > 10;
-                }
-            };
-            map.putAll(scoreMap
+           LinkedHashMap<String , Integer> map =  scoreMap
                     .entrySet()
                     .stream()
                     .sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
-                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (name, score) -> score, LinkedHashMap::new)));
+                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (name, score) -> score, LinkedHashMap::new));
 
-        return map;
+           LinkedHashMap<String , Integer> mapToDisplay = new LinkedHashMap<>();
+
+           for(Map.Entry<String , Integer> mapIter : scoreMap.entrySet()) {
+               mapToDisplay.put(mapIter.getKey() , mapIter.getValue());
+               if (map.size() == 10) {
+                   break;
+               }
+           }
+
+        return mapToDisplay;
     }
 }
